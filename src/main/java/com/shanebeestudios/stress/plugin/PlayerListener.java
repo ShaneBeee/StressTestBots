@@ -1,7 +1,7 @@
-package com.shanebeestudios.mcbots.plugin;
+package com.shanebeestudios.stress.plugin;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import com.shanebeestudios.mcbots.api.util.Utils;
+import com.shanebeestudios.stress.api.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,10 +16,10 @@ import java.util.UUID;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class PlayerListener implements Listener {
 
-    private final McBots plugin;
+    private final StressTestBots plugin;
     private final Map<UUID, PlayerProfile> profileMap = new HashMap<>();
 
-    public PlayerListener(McBots plugin) {
+    public PlayerListener(StressTestBots plugin) {
         this.plugin = plugin;
     }
 

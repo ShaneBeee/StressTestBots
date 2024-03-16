@@ -1,7 +1,7 @@
-package com.shanebeestudios.mcbots.api.timer;
+package com.shanebeestudios.stress.api.timer;
 
-import com.shanebeestudios.mcbots.api.bot.Bot;
-import com.shanebeestudios.mcbots.api.bot.BotManager;
+import com.shanebeestudios.stress.api.bot.Bot;
+import com.shanebeestudios.stress.api.bot.BotManager;
 
 import java.util.Timer;
 import java.util.TimerTask;

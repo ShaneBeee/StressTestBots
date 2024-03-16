@@ -1,5 +1,5 @@
-main: com.shanebeestudios.mcbots.plugin.McBots
-name: "McBots"
+main: com.shanebeestudios.stress.plugin.StressTestBots
+name: "StressTestBots"
 version: @version@
 api-version: 1.13
 loadbefore:

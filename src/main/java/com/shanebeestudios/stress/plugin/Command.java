@@ -1,8 +1,8 @@
-package com.shanebeestudios.mcbots.plugin;
+package com.shanebeestudios.stress.plugin;
 
-import com.shanebeestudios.mcbots.api.bot.Bot;
-import com.shanebeestudios.mcbots.api.bot.BotManager;
-import com.shanebeestudios.mcbots.api.util.Logger;
+import com.shanebeestudios.stress.api.bot.Bot;
+import com.shanebeestudios.stress.api.bot.BotManager;
+import com.shanebeestudios.stress.api.util.Logger;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
@@ -17,11 +17,11 @@ import java.util.Collection;
 
 public class Command {
 
-    private final McBots plugin;
+    private final StressTestBots plugin;
     private final BotManager botManager;
     private final BukkitScheduler scheduler;
 
-    public Command(McBots plugin) {
+    public Command(StressTestBots plugin) {
         this.plugin = plugin;
         this.botManager = plugin.getPluginBotManager();
         this.scheduler = Bukkit.getScheduler();
@@ -30,7 +30,7 @@ public class Command {
 
     @SuppressWarnings("unchecked")
     public void registerCommand() {
-        CommandTree command = new CommandTree("mcbots")
+        CommandTree command = new CommandTree("stress")
             // Create a bot
             .then(new LiteralArgument("create")
                 .then(new LiteralArgument("named")

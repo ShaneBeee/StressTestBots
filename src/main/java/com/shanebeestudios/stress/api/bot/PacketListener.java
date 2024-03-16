@@ -1,4 +1,4 @@
-package com.shanebeestudios.mcbots.api.bot;
+package com.shanebeestudios.stress.api.bot;
 
 import com.github.steveice10.mc.protocol.data.game.ClientCommand;
 import com.github.steveice10.mc.protocol.data.game.level.notify.GameEvent;

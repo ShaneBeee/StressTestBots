@@ -1,4 +1,4 @@
-package com.shanebeestudios.mcbots.api.util;
+package com.shanebeestudios.stress.api.util;
 
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;

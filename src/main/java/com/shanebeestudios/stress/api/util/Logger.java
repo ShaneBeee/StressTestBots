@@ -1,4 +1,4 @@
-package com.shanebeestudios.mcbots.api.util;
+package com.shanebeestudios.stress.api.util;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class Logger {
 
-    private static final String PREFIX = "&7[&bMc&3Bot&7]";
-    private static final String PREFIX_ERROR = "&7[&bMc&3Bot &cERROR&7]";
-    private static final String PREFIX_WARN = "&7[&bMc&3Bot &eWARN&7]";
+    private static final String PREFIX = "&7[&bStress&3Test&bBots&7]";
+    private static final String PREFIX_ERROR = "&7[&bStress&3Test&bBots &cERROR&7]";
+    private static final String PREFIX_WARN = "&7[&bStress&3Test&bBots &eWARN&7]";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
 
     @SuppressWarnings("deprecation") // Paper deprecation

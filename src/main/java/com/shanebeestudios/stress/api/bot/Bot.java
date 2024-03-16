@@ -1,4 +1,4 @@
-package com.shanebeestudios.mcbots.api.bot;
+package com.shanebeestudios.stress.api.bot;
 
 import com.github.steveice10.mc.auth.service.AuthenticationService;
 import com.github.steveice10.mc.auth.service.SessionService;

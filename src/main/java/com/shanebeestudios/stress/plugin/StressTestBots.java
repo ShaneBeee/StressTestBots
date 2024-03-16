@@ -1,7 +1,7 @@
-package com.shanebeestudios.mcbots.plugin;
+package com.shanebeestudios.stress.plugin;
 
-import com.shanebeestudios.mcbots.api.bot.BotManager;
-import com.shanebeestudios.mcbots.api.util.Logger;
+import com.shanebeestudios.stress.api.bot.BotManager;
+import com.shanebeestudios.stress.api.util.Logger;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import dev.jorel.commandapi.exceptions.UnsupportedVersionException;
@@ -9,10 +9,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@SuppressWarnings("unused")
-public class McBots extends JavaPlugin {
+import java.io.File;
 
-    private static McBots instance;
+@SuppressWarnings("unused")
+public class StressTestBots extends JavaPlugin {
+
+    private static StressTestBots instance;
     private boolean commandApiCanLoad;
     private BotManager botManager;
 
@@ -69,7 +71,7 @@ public class McBots extends JavaPlugin {
     }
 
     private void loadNicknameFile() {
-        if (this.getResource("nicks.txt") == null) {
+        if (!new File(getDataFolder(), "nicks.txt").exists()) {
             this.saveResource("nicks.txt", false);
         }
     }
@@ -85,7 +87,7 @@ public class McBots extends JavaPlugin {
     }
 
     // Getters
-    public static McBots getInstance() {
+    public static StressTestBots getInstance() {
         return instance;
     }
 

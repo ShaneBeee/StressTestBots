@@ -1,4 +1,4 @@
-package com.shanebeestudios.mcbots.api.util;
+package com.shanebeestudios.stress.api.util;
 
 public class Pair<F, S> {
 

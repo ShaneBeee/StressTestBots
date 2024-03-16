@@ -1,8 +1,8 @@
-package com.shanebeestudios.mcbots.api.bot;
+package com.shanebeestudios.stress.api.bot;
 
-import com.shanebeestudios.mcbots.api.generator.NickGenerator;
-import com.shanebeestudios.mcbots.api.timer.GravityTimer;
-import com.shanebeestudios.mcbots.api.util.Logger;
+import com.shanebeestudios.stress.api.generator.NickGenerator;
+import com.shanebeestudios.stress.api.timer.GravityTimer;
+import com.shanebeestudios.stress.api.util.Logger;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class BotManager {
     public BotManager() {
         this.autoRespawnDelay = 3000;
         this.inetAddr = createInetAddress(getServerAddress(), Bukkit.getPort());
-        this.nickGenerator = new NickGenerator("plugins/McBots/nicks.txt", this.nickPrefix, true);
+        this.nickGenerator = new NickGenerator("plugins/StressTestBots/nicks.txt", this.nickPrefix, true);
         this.hasGravity = true;
         this.gravityTimer = new GravityTimer(this);
         this.gravityTimer.startTimer();
