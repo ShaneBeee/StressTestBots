@@ -45,9 +45,9 @@ public class Command {
                             }
                         })))
                 .then(new LiteralArgument("random")
-                    .then(new IntegerArgument("amount")
+                    .then(new IntegerArgument("amount", 1, Bukkit.getMaxPlayers())
                         .setOptional(true)
-                        .then(new IntegerArgument("delay-ticks")
+                        .then(new IntegerArgument("delay-ticks", 0)
                             .setOptional(true)
                             .executes((sender, args) -> {
                                 int amount = (int) args.getOrDefault("amount", 1);
