@@ -23,7 +23,8 @@ public class McBots extends JavaPlugin {
             return;
         }
         try {
-            CommandAPI.onLoad(new CommandAPIBukkitConfig(this).verboseOutput(false));
+            CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
+                .verboseOutput(false).silentLogs(true));
             this.commandApiCanLoad = true;
         } catch (UnsupportedVersionException ignore) {
             this.commandApiCanLoad = false;
