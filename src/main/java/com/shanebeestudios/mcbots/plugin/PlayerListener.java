@@ -16,10 +16,10 @@ import java.util.UUID;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class PlayerListener implements Listener {
 
-    private final McBotPlugin plugin;
+    private final McBots plugin;
     private final Map<UUID, PlayerProfile> profileMap = new HashMap<>();
 
-    public PlayerListener(McBotPlugin plugin) {
+    public PlayerListener(McBots plugin) {
         this.plugin = plugin;
     }
 

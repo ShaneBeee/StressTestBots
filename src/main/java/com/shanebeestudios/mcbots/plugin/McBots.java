@@ -10,9 +10,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("unused")
-public class McBotPlugin extends JavaPlugin {
+public class McBots extends JavaPlugin {
 
-    private static McBotPlugin instance;
+    private static McBots instance;
     private boolean commandApiCanLoad;
     private BotManager botManager;
 
@@ -82,7 +82,7 @@ public class McBotPlugin extends JavaPlugin {
     }
 
     // Getters
-    public static McBotPlugin getInstance() {
+    public static McBots getInstance() {
         return instance;
     }
 

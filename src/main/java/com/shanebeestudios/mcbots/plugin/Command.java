@@ -17,11 +17,11 @@ import java.util.Collection;
 
 public class Command {
 
-    private final McBotPlugin plugin;
+    private final McBots plugin;
     private final BotManager botManager;
     private final BukkitScheduler scheduler;
 
-    public Command(McBotPlugin plugin) {
+    public Command(McBots plugin) {
         this.plugin = plugin;
         this.botManager = plugin.getPluginBotManager();
         this.scheduler = Bukkit.getScheduler();

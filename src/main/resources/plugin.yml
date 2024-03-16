@@ -1,4 +1,4 @@
-main: com.shanebeestudios.mcbots.plugin.McBotPlugin
+main: com.shanebeestudios.mcbots.plugin.McBots
 name: "McBots"
 version: @version@
 api-version: 1.13
