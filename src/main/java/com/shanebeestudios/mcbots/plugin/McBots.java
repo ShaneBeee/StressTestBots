@@ -68,7 +68,9 @@ public class McBots extends JavaPlugin {
     }
 
     private void loadNicknameFile() {
-        this.saveResource("nicks.txt", false);
+        if (this.getResource("nicks.txt") == null) {
+            this.saveResource("nicks.txt", false);
+        }
     }
 
     private void setupBotLogic() {
