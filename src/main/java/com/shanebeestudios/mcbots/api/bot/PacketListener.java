@@ -21,11 +21,12 @@ import java.util.TimerTask;
 @SuppressWarnings("DuplicatedCode")
 public class PacketListener extends SessionAdapter {
 
-    protected Bot bot;
-    protected Session client;
-    protected BotManager botManager;
-    protected ArrayList<String> joinMessages;
-    protected int autoRespawnDelay;
+    private final Bot bot;
+    private int entityId;
+    private final Session client;
+    private final BotManager botManager;
+    private final ArrayList<String> joinMessages;
+    private int autoRespawnDelay;
 
     public PacketListener(Bot bot) {
         this.bot = bot;
@@ -35,47 +36,65 @@ public class PacketListener extends SessionAdapter {
         this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
     }
 
+    @Override
     public void packetReceived(Session session, Packet packet) {
         if (packet instanceof ClientboundGameEventPacket gameEventPacket) {
-            if (gameEventPacket.getNotification() == GameEvent.ENABLE_RESPAWN_SCREEN) {
-                RespawnScreenValue respawnScreenValue = (RespawnScreenValue) gameEventPacket.getValue();
-                if (respawnScreenValue == RespawnScreenValue.IMMEDIATE_RESPAWN) {
-                    this.autoRespawnDelay = 0;
-                } else {
-                    this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
-                }
-            }
+            gameEvent(gameEventPacket);
         } else if (packet instanceof ClientboundLoginPacket loginPacket) {
-            if (!loginPacket.isEnableRespawnScreen()) {
-                this.autoRespawnDelay = 0;
-            }
-            this.bot.setConnected(true);
-
-            // Might implement this later
-            if (!this.joinMessages.isEmpty()) {
-                for (String msg : joinMessages) {
-                    this.bot.sendChat(msg);
-
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            }
+            login(loginPacket);
         } else if (packet instanceof ClientboundPlayerPositionPacket positionPacket) {
-            this.bot.setLastPosition(positionPacket.getX(), positionPacket.getY(), positionPacket.getZ());
-            this.client.send(new ServerboundAcceptTeleportationPacket(positionPacket.getTeleportId()));
-        } else if (packet instanceof ClientboundPlayerCombatKillPacket) {
-            if (this.autoRespawnDelay >= 0) {
-                new Timer().schedule(
-                    new TimerTask() {
-                        @Override
-                        public void run() {
-                            PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN));
-                        }
-                    }, this.autoRespawnDelay);
+            playerPosition(positionPacket);
+        } else if (packet instanceof ClientboundPlayerCombatKillPacket killPacket) {
+            playerDeath(killPacket);
+        }
+    }
+
+    private void gameEvent(ClientboundGameEventPacket gameEventPacket) {
+        if (gameEventPacket.getNotification() == GameEvent.ENABLE_RESPAWN_SCREEN) {
+            RespawnScreenValue respawnScreenValue = (RespawnScreenValue) gameEventPacket.getValue();
+            if (respawnScreenValue == RespawnScreenValue.IMMEDIATE_RESPAWN) {
+                this.autoRespawnDelay = 0;
+            } else {
+                this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
             }
         }
+    }
+
+    private void login(ClientboundLoginPacket loginPacket) {
+        this.entityId = loginPacket.getEntityId();
+        if (!loginPacket.isEnableRespawnScreen()) {
+            this.autoRespawnDelay = 0;
+        }
+        this.bot.setConnected(true);
+
+        // Might implement this later
+        if (!this.joinMessages.isEmpty()) {
+            for (String msg : joinMessages) {
+                this.bot.sendChat(msg);
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+    }
+
+    private void playerPosition(ClientboundPlayerPositionPacket positionPacket) {
+        this.bot.setLastPosition(positionPacket.getX(), positionPacket.getY(), positionPacket.getZ());
+        this.client.send(new ServerboundAcceptTeleportationPacket(positionPacket.getTeleportId()));
+    }
+
+    @SuppressWarnings("unused")
+    private void playerDeath(ClientboundPlayerCombatKillPacket killPacket) {
+        if (this.autoRespawnDelay < 0) return;
+        new Timer().schedule(
+            new TimerTask() {
+                @Override
+                public void run() {
+                    PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN));
+                }
+            }, this.autoRespawnDelay);
     }
 
     public void disconnected(DisconnectedEvent event) {
