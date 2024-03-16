@@ -42,7 +42,6 @@ processResources {
 
 shadowJar {
     archiveClassifier = null
-    minimize()
     relocate("dev.jorel.commandapi", "com.shanebeestudios.mcbots.api.commandapi")
 }
 
