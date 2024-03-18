@@ -55,6 +55,8 @@ public class Bot {
      */
     public void connect() {
         new Thread(() -> {
+            // We'll manage the keep alive, to create a fake letancy
+            this.client.setFlag("manage-keep-alive", false);
             this.client.addListener(new PacketListener(this));
             this.client.connect();
         }).start();

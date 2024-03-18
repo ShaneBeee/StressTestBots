@@ -3,6 +3,8 @@ package com.shanebeestudios.stress.api.bot;
 import com.github.steveice10.mc.protocol.data.game.ClientCommand;
 import com.github.steveice10.mc.protocol.data.game.level.notify.GameEvent;
 import com.github.steveice10.mc.protocol.data.game.level.notify.RespawnScreenValue;
+import com.github.steveice10.mc.protocol.packet.common.clientbound.ClientboundKeepAlivePacket;
+import com.github.steveice10.mc.protocol.packet.common.serverbound.ServerboundKeepAlivePacket;
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerCombatKillPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket;
@@ -15,10 +17,11 @@ import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import com.github.steveice10.packetlib.packet.Packet;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"DuplicatedCode", "FieldCanBeLocal", "unused"})
 public class PacketListener extends SessionAdapter {
 
     private final Bot bot;
@@ -27,6 +30,7 @@ public class PacketListener extends SessionAdapter {
     private final BotManager botManager;
     private final ArrayList<String> joinMessages;
     private int autoRespawnDelay;
+    private final int latency;
 
     public PacketListener(Bot bot) {
         this.bot = bot;
@@ -34,6 +38,7 @@ public class PacketListener extends SessionAdapter {
         this.botManager = bot.getBotManager();
         this.joinMessages = this.botManager.getJoinMessages();
         this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
+        this.latency = new Random().nextInt(100, 1000);
     }
 
     @Override
@@ -46,6 +51,8 @@ public class PacketListener extends SessionAdapter {
             playerPosition(positionPacket);
         } else if (packet instanceof ClientboundPlayerCombatKillPacket killPacket) {
             playerDeath(killPacket);
+        } else if (packet instanceof ClientboundKeepAlivePacket keepAlivePacket) {
+            playerLatency(keepAlivePacket);
         }
     }
 
@@ -95,6 +102,15 @@ public class PacketListener extends SessionAdapter {
                     PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN));
                 }
             }, this.autoRespawnDelay);
+    }
+
+    private void playerLatency(ClientboundKeepAlivePacket keepAlivePacket) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                PacketListener.this.client.send(new ServerboundKeepAlivePacket(keepAlivePacket.getPingId()));
+            }
+        }, this.latency);
     }
 
     public void disconnected(DisconnectedEvent event) {
