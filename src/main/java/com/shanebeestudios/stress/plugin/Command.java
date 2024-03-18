@@ -33,6 +33,7 @@ public class Command {
         CommandTree command = new CommandTree("stress")
             // Create a bot
             .then(new LiteralArgument("create")
+                .withPermission("stresstestbots.command.create")
                 .then(new LiteralArgument("named")
                     .then(new StringArgument("name")
                         .executes((sender, args) -> {
@@ -66,6 +67,7 @@ public class Command {
 
             // Remove a bot
             .then(new LiteralArgument("remove")
+                .withPermission("stresstestbots.command.remove")
                 .then(new EntitySelectorArgument.ManyPlayers("players")
                     .executes((sender, args) -> {
                         Collection<Entity> players = (Collection<Entity>) args.get("players");
@@ -81,6 +83,7 @@ public class Command {
 
             // Make a bot send a chat message or command
             .then(new LiteralArgument("chat")
+                .withPermission("stresstestbots.command.chat")
                 .then(new EntitySelectorArgument.ManyPlayers("players")
                     .then(new GreedyStringArgument("message")
                         .executes((sender, args) -> {
