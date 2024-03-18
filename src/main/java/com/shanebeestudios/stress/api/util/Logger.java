@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class Logger {
 
     private static final String PREFIX = "&7[&bStress&3Test&bBots&7]";
-    private static final String PREFIX_ERROR = "&7[&bStress&3Test&bBots &cERROR&7]";
-    private static final String PREFIX_WARN = "&7[&bStress&3Test&bBots &eWARN&7]";
+    private static final String PREFIX_ERROR = "&7[&bStress&3Test&bBots &cERROR&7]&c";
+    private static final String PREFIX_WARN = "&7[&bStress&3Test&bBots &eWARN&7]&e";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
 
     @SuppressWarnings("deprecation") // Paper deprecation
@@ -38,7 +38,7 @@ public class Logger {
     }
 
     public static void error(String error) {
-        log(PREFIX_ERROR, "&c" + error);
+        log(PREFIX_ERROR, error);
     }
 
     @SuppressWarnings("CallToPrintStackTrace")
