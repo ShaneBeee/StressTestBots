@@ -59,8 +59,14 @@ public class StressTestBots extends JavaPlugin {
         setupBotLogic();
         setupCommand();
 
-        long finish = System.currentTimeMillis() - start;
+        // Beta check + notice
         String version = getDescription().getVersion();
+        if (version.contains("-")) {
+            Logger.warn("This is a BETA build, things may not work as expected, please report any bugs on GitHub.");
+            Logger.warn("https://github.com/ShaneBeee/StressTestBots/issues");
+        }
+
+        long finish = System.currentTimeMillis() - start;
         Logger.info("&aSuccessfully enabled v%s&7 in &b%s ms", version, finish);
     }
 
