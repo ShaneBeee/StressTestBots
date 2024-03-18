@@ -7,6 +7,10 @@ plugins {
 
 group 'com.shanebeestudios'
 version '1.0.0-beta1'
+def mcProtocolLibVer = '1.20.4-2-SNAPSHOT'
+def adventureVer = '4.16.0'
+def paperVer = '1.20.4-R0.1-SNAPSHOT'
+def commandApiVer = '9.3.0'
 
 compileJava   {
     sourceCompatibility = '17'
@@ -26,14 +30,14 @@ repositories {
 
 dependencies {
     // McProtocol
-    implementation('com.github.steveice10:mcprotocollib:1.20.4-2-SNAPSHOT')
-    implementation('net.kyori:adventure-text-serializer-gson:4.16.0')
+    implementation('com.github.steveice10:mcprotocollib:' + mcProtocolLibVer)
+    implementation('net.kyori:adventure-text-serializer-gson:' + adventureVer)
 
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:" + paperVer)
 
     // Command Api
-    implementation("dev.jorel:commandapi-bukkit-shade:9.3.0")
+    implementation("dev.jorel:commandapi-bukkit-shade:" + commandApiVer)
 }
 
 processResources {
@@ -61,4 +65,15 @@ tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
     into '/Users/ShaneBee/Desktop/Server/Skript/1-20-4/plugins'
+}
+
+javadoc {
+    destinationDir = file("${buildDir}/javadoc")
+    options {
+        links('https://hub.spigotmc.org/javadocs/spigot/')
+        links('https://jd.advntr.dev/api/4.14.0/')
+        links('https://repo.opencollab.dev/javadoc/maven-snapshots/com/github/steveice10/mcauthlib/1.5-SNAPSHOT/raw')
+        links('https://repo.opencollab.dev/javadoc/maven-snapshots/com/github/steveice10/mcprotocollib/' + mcProtocolLibVer + '/raw')
+    }
+    options.addStringOption('Xdoclint:none', '-quiet')
 }

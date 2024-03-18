@@ -3,14 +3,15 @@ package com.shanebeestudios.stress.api.bot;
 import com.shanebeestudios.stress.api.generator.NickGenerator;
 import com.shanebeestudios.stress.api.timer.GravityTimer;
 import com.shanebeestudios.stress.api.util.Logger;
+import com.shanebeestudios.stress.api.util.Utils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bot manager for server plugin
@@ -19,58 +20,82 @@ import java.util.ArrayList;
 public class BotManager {
 
     private final int autoRespawnDelay;
-    private final String nickPath = null;
-    private final String nickPrefix = "";
     private final boolean hasGravity;
-    private final ArrayList<String> joinMessages = new ArrayList<>();
+    private final List<String> joinMessages = new ArrayList<>();
     private final InetSocketAddress inetAddr;
-    private final ArrayList<Bot> bots = new ArrayList<>();
+    private final List<Bot> bots = new ArrayList<>();
     private final NickGenerator nickGenerator;
     private final GravityTimer gravityTimer;
 
+    /**
+     * @hidden
+     */
     public BotManager() {
         this.autoRespawnDelay = 3000;
-        this.inetAddr = createInetAddress(getServerAddress(), Bukkit.getPort());
-        this.nickGenerator = new NickGenerator("plugins/StressTestBots/nicks.txt", this.nickPrefix, true);
+        this.inetAddr = Utils.createInetAddress(getServerAddress(), Bukkit.getPort());
+        this.nickGenerator = new NickGenerator("plugins/StressTestBots/nicks.txt", "", true);
         this.hasGravity = true;
         this.gravityTimer = new GravityTimer(this);
         this.gravityTimer.startTimer();
     }
 
-    // Methods
-    private InetSocketAddress createInetAddress(String address, int port) {
-        try {
-            InetAddress inetAddress = InetAddress.getByName(address);
-            return new InetSocketAddress(inetAddress.getHostAddress(), port);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+    /**
+     * Create an instance of bot manager
+     *
+     * @param autoRespawnDelay Delay for auto-respawning (0 = instant, -1 = never)
+     * @param hasGravity       Whether the bots have gravity
+     * @param inetAddr         Address to connect bots to (see {@link Utils#createInetAddress(String, int)})
+     * @param nickPath         Path for nickname file (if null will generate from built in file)
+     * @param nickPrefix       Prefix for nicknames
+     */
+    public BotManager(int autoRespawnDelay, boolean hasGravity, InetSocketAddress inetAddr, @Nullable String nickPath, @Nullable String nickPrefix) {
+        this.autoRespawnDelay = autoRespawnDelay;
+        this.hasGravity = hasGravity;
+        this.inetAddr = inetAddr;
+        this.nickGenerator = new NickGenerator(nickPath, nickPrefix, true);
+        this.gravityTimer = new GravityTimer(this);
+        this.gravityTimer.startTimer();
     }
 
+    /**
+     * Get the auto respawn delay
+     *
+     * @return Auto respawn delay
+     */
     public int getAutoRespawnDelay() {
         return this.autoRespawnDelay;
     }
 
-    public String getNickPath() {
-        return this.nickPath;
-    }
-
-    public String getNickPrefix() {
-        return this.nickPrefix;
-    }
-
+    /**
+     * Wether the gravity timer is enabled
+     *
+     * @return Gravity timer is enabled
+     */
     public boolean hasGravity() {
         return this.hasGravity;
     }
 
-    public ArrayList<String> getJoinMessages() {
+    /**
+     * @hidden currently unused
+     * @return hidden
+     */
+    public List<String> getJoinMessages() {
         return this.joinMessages;
     }
 
+    /**
+     * Get the InetAddress these bots will connect to
+     *
+     * @return Address of connection
+     */
     public InetSocketAddress getInetAddr() {
         return this.inetAddr;
     }
 
+    /**
+     * @hidden not sure if this has a use by others
+     * @return hidden
+     */
     public GravityTimer getGravityTimer() {
         return this.gravityTimer;
     }
@@ -80,7 +105,7 @@ public class BotManager {
      *
      * @return All loaded bots
      */
-    public ArrayList<Bot> getBots() {
+    public List<Bot> getBots() {
         return this.bots;
     }
 
@@ -156,10 +181,20 @@ public class BotManager {
         }
     }
 
+    /**
+     * Log to console that a bot was created
+     *
+     * @param name Name of bot
+     */
     public void logBotCreated(String name) {
         Logger.info("Bot '&b" + name + "&7' created");
     }
 
+    /**
+     * Log disconnection of bot to console
+     *
+     * @param name Name of bot
+     */
     public void logBotDisconnected(String name) {
         Logger.info("Bot '&b" + name + "&7' disconnected");
     }

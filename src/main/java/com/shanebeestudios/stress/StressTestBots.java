@@ -1,4 +1,4 @@
-package com.shanebeestudios.stress.plugin;
+package com.shanebeestudios.stress;
 
 import com.shanebeestudios.stress.api.bot.BotManager;
 import com.shanebeestudios.stress.api.util.Logger;
@@ -11,6 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
+/**
+ * Main plugin class
+ */
 @SuppressWarnings("unused")
 public class StressTestBots extends JavaPlugin {
 
@@ -18,6 +21,9 @@ public class StressTestBots extends JavaPlugin {
     private boolean commandApiCanLoad;
     private BotManager botManager;
 
+    /**
+     * @hidden
+     */
     @Override
     public void onLoad() {
         if (Bukkit.getOnlineMode()) {
@@ -33,6 +39,9 @@ public class StressTestBots extends JavaPlugin {
         }
     }
 
+    /**
+     * @hidden
+     */
     @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
@@ -70,6 +79,9 @@ public class StressTestBots extends JavaPlugin {
         Logger.info("&aSuccessfully enabled v%s&7 in &b%s ms", version, finish);
     }
 
+    /**
+     * @hidden
+     */
     @Override
     public void onDisable() {
         if (!Bukkit.getOnlineMode()) CommandAPI.onDisable();
@@ -92,12 +104,22 @@ public class StressTestBots extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
     }
 
+    /**
+     * Get an instance of this plugin
+     *
+     * @return Instance of this plugin
+     */
     // Getters
     public static StressTestBots getInstance() {
         return instance;
     }
 
-    public BotManager getPluginBotManager() {
+    /**
+     * Get an instance of the {@link BotManager}
+     *
+     * @return Instance of bot manager
+     */
+    public BotManager getBotManager() {
         return this.botManager;
     }
 

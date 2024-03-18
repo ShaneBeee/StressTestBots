@@ -14,6 +14,9 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generator to create nicknames for bots
+ */
 @SuppressWarnings("FieldCanBeLocal")
 public class NickGenerator {
 
@@ -27,6 +30,13 @@ public class NickGenerator {
     private boolean real;
     private String prefix = "";
 
+    /**
+     * Create a new instance of the nickname generator
+     *
+     * @param path             Path for nickname file (if null will generate from built in file)
+     * @param prefix           Prefix for nicknames
+     * @param useRealNicknames Whether or not to use real nicknames (or generate random ones)
+     */
     public NickGenerator(@Nullable String path, String prefix, boolean useRealNicknames) {
         if (path != null) {
             Logger.info("Loading nicknames from specified file");
@@ -89,13 +99,19 @@ public class NickGenerator {
         return result.toString();
     }
 
+    /**
+     * Get next real nickname
+     *
+     * @return Next real nickname
+     */
     public String nextReal() {
         String nick = this.prefix + this.lines.get(this.random.nextInt(this.linesSize));
         return nick.length() <= 16 ? nick : nick.substring(0, 15);
     }
 
     /**
-     * Generate next nick
+     * Generate next nickname
+     * <p>If not using real nicknames, this will renerate a random name</p>
      *
      * @return generated nick
      */

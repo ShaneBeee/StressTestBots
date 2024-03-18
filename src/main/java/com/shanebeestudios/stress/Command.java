@@ -1,4 +1,4 @@
-package com.shanebeestudios.stress.plugin;
+package com.shanebeestudios.stress;
 
 import com.shanebeestudios.stress.api.bot.Bot;
 import com.shanebeestudios.stress.api.bot.BotManager;
@@ -15,6 +15,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Collection;
 
+/**
+ * @hidden
+ */
 public class Command {
 
     private final StressTestBots plugin;
@@ -23,7 +26,7 @@ public class Command {
 
     public Command(StressTestBots plugin) {
         this.plugin = plugin;
-        this.botManager = plugin.getPluginBotManager();
+        this.botManager = plugin.getBotManager();
         this.scheduler = Bukkit.getScheduler();
         registerCommand();
     }

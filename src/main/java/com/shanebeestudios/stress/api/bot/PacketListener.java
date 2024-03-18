@@ -16,11 +16,14 @@ import com.github.steveice10.packetlib.event.session.DisconnectedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import com.github.steveice10.packetlib.packet.Packet;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * @hidden
+ */
 @SuppressWarnings({"DuplicatedCode", "FieldCanBeLocal", "unused"})
 public class PacketListener extends SessionAdapter {
 
@@ -28,7 +31,7 @@ public class PacketListener extends SessionAdapter {
     private int entityId;
     private final Session client;
     private final BotManager botManager;
-    private final ArrayList<String> joinMessages;
+    private final List<String> joinMessages;
     private int autoRespawnDelay;
     private final int latency;
 

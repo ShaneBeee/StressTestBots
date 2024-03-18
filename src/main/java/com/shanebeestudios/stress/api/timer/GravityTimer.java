@@ -6,6 +6,10 @@ import com.shanebeestudios.stress.api.bot.BotManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+/**
+ * @hidden
+ */
 public class GravityTimer {
 
     private final Timer timer = new Timer();
@@ -14,6 +18,7 @@ public class GravityTimer {
     public GravityTimer(BotManager botManager) {
         this.botManager = botManager;
     }
+
 
     public void startTimer() {
         this.timer.scheduleAtFixedRate(new TimerTask() {

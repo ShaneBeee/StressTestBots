@@ -7,6 +7,9 @@ import org.bukkit.command.CommandSender;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Main logger for logging messages
+ */
 @SuppressWarnings("unused")
 public class Logger {
 
@@ -16,7 +19,7 @@ public class Logger {
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
 
     @SuppressWarnings("deprecation") // Paper deprecation
-    public static String getColString(String string) {
+    private static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
         while (matcher.find()) {
             final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
@@ -28,42 +31,60 @@ public class Logger {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
+    /**
+     * Log a message to a command sender
+     *
+     * @param sender  Sender message will go to
+     * @param format  Format of message to send
+     * @param objects Objects to format into message
+     */
     public static void logToSender(CommandSender sender, String format, Object... objects) {
-        sender.sendMessage(getColString(PREFIX + " &7" + String.format(format, objects)));
+        sender.sendMessage(getColString(PREFIX + " " + String.format(format, objects)));
     }
 
-    public static void log(String prefix, String message) {
+    private static void log(String prefix, String message) {
         String string = getColString(prefix + " " + message);
         Bukkit.getConsoleSender().sendMessage(string);
     }
 
-    public static void error(String error) {
-        log(PREFIX_ERROR, error);
+    /**
+     * Log an error message to console
+     *
+     * @param format  Format of error message to log
+     * @param objects Objects to format into message
+     */
+    public static void error(String format, Object... objects) {
+        log(PREFIX_ERROR, String.format(format, objects));
     }
 
+    /**
+     * Print a stacktrace to console
+     *
+     * @param e Exception to print
+     */
     @SuppressWarnings("CallToPrintStackTrace")
     public static void error(Exception e) {
         e.printStackTrace();
     }
 
+    /**
+     * Log a message to console
+     *
+     * @param format  Format of message to log
+     * @param objects Objects to format into message
+     */
     public static void info(String format, Object... objects) {
-        log(PREFIX, "&7" + String.format(format, objects));
+        log(PREFIX, String.format(format, objects));
     }
 
-    public static void info(String... message) {
-        log(PREFIX, "&7" + String.join(" ", message));
-    }
-
-    public static void info() {
-        log(PREFIX, "");
-    }
-
-    public static void warn(String... warning) {
-        log(PREFIX_WARN, String.join(" ", warning));
-    }
-
-    public static void critical(Exception e) {
-        error(e);
+    /**
+     * Log a warning message to console
+     *
+     * @param format  Format of warning message to log
+     * @param objects Objects to format into message
+     */
+    public static void warn(String format, Object... objects) {
+        log(PREFIX_WARN, String.format(format, objects));
     }
 
 }

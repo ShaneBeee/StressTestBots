@@ -1,4 +1,4 @@
-package com.shanebeestudios.stress.plugin;
+package com.shanebeestudios.stress;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.shanebeestudios.stress.api.util.Utils;
@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @hidden
+ */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class PlayerListener implements Listener {
 
@@ -26,9 +29,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     private void onPreJoin(AsyncPlayerPreLoginEvent event) {
         String name = event.getName();
-        String uuidString = Utils.nameToUUID(name);
-        if (uuidString != null) {
-            UUID uuid = UUID.fromString(uuidString.replaceFirst("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
+        UUID uuid = Utils.nameToUUID(name);
+        if (uuid != null) {
             PlayerProfile profile = Bukkit.createProfile(uuid, name);
             profile.complete(true, true);
             this.profileMap.put(event.getUniqueId(), profile);
