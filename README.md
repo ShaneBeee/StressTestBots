@@ -12,3 +12,6 @@ See the [**releases**](https://github.com/ShaneBeee/StressTestBots/releases) pag
 
 # How To Use:
 Please see the [**wiki**](https://github.com/ShaneBeee/StressTestBots/wiki) for all details.
+
+# JavaDocs
+Incase you want to interact a bit more, check out the [**JavaDocs**](https://shanebeee.github.io/docs/StressTestBots/)
