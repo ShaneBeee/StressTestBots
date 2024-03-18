@@ -5,3 +5,10 @@ This is a fork of the [**original**](https://github.com/crpmax/mc-bots) with a b
 
 # Requirements:
 - Java 17+
+- Bukkit based server in offline mode
+
+# Download:
+See the [**releases**](https://github.com/ShaneBeee/StressTestBots/releases) page for all releases.
+
+# How To Use:
+Please see the [**wiki**](https://github.com/ShaneBeee/StressTestBots/wiki) for all details.
