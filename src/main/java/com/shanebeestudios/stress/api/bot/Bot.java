@@ -7,6 +7,8 @@ import com.github.steveice10.mc.protocol.MinecraftProtocol;
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosRotPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerRotPacket;
 import com.github.steveice10.packetlib.ProxyInfo;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.packet.Packet;
@@ -183,12 +185,13 @@ public class Bot {
     }
 
     /**
-     * Move the bot to a new location
+     * Move the bot by an amount
+     * <p>NOTE: The bot should not move more than 8 blocks</p>
      * <p>Will send a packet to the server as well</p>
      *
-     * @param x X coord of new location
-     * @param y Y coord of new location
-     * @param z Z coord of new location
+     * @param x Amount to move on the X axis
+     * @param y Amount to move on the Y axis
+     * @param z Amount to move on the Z axis
      */
     public void move(double x, double y, double z) {
         this.lastX += x;
@@ -197,8 +200,40 @@ public class Bot {
         moveTo(this.lastX, this.lastY, this.lastZ);
     }
 
-    private void moveTo(double x, double y, double z) {
+    /**
+     * Move the bot to a new location
+     * <p>NOTE: The bot should not move more than 8 blocks</p>
+     *
+     * @param x X coord of new location
+     * @param y Y coord of new location
+     * @param z Z coord of new location
+     */
+    public void moveTo(double x, double y, double z) {
         this.client.send(new ServerboundMovePlayerPosPacket(true, x, y, z));
+    }
+
+    /**
+     * Move the bot to a new location
+     * <p>NOTE: The bot should not move more than 8 blocks</p>
+     *
+     * @param x     X coord of new location
+     * @param y     Y coord of new location
+     * @param z     Z coord of new location
+     * @param yaw   Yaw of new location
+     * @param pitch Pitch of new location
+     */
+    public void moveTo(double x, double y, double z, float yaw, float pitch) {
+        this.client.send(new ServerboundMovePlayerPosRotPacket(true, x, y, z, yaw, pitch));
+    }
+
+    /**
+     * Rotate the bot
+     *
+     * @param yaw   Yaw of new position
+     * @param pitch Pitch of new position
+     */
+    private void look(float yaw, float pitch) {
+        this.client.send(new ServerboundMovePlayerRotPacket(true, yaw, pitch));
     }
 
     /**
