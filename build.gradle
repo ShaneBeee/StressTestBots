@@ -3,6 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id "io.github.goooler.shadow" version "8.1.7"
+    id 'maven-publish'
 }
 
 group 'com.shanebeestudios'
@@ -45,7 +46,7 @@ processResources {
 }
 
 shadowJar {
-    archiveClassifier = null
+    archiveFileName = project.name + "-" + project.version + ".jar"
     relocate("dev.jorel.commandapi", "com.shanebeestudios.mcbots.api.commandapi")
 }
 
@@ -65,6 +66,18 @@ tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
     into '/Users/ShaneBee/Desktop/Server/Skript/1-20-4/plugins'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.github.ShaneBeee'
+            artifactId 'SkBee'
+            version project.version
+            artifact shadowJar
+            artifact tasks.jar
+        }
+    }
 }
 
 javadoc {
