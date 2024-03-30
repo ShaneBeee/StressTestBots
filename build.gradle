@@ -72,7 +72,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId 'com.github.ShaneBeee'
-            artifactId 'SkBee'
+            artifactId 'StressTestBots'
             version project.version
             artifact shadowJar
             artifact tasks.jar
