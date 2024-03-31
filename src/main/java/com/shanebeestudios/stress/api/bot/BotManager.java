@@ -6,6 +6,7 @@ import com.shanebeestudios.stress.api.timer.GravityTimer;
 import com.shanebeestudios.stress.api.util.Logger;
 import com.shanebeestudios.stress.api.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.Inet4Address;
@@ -169,6 +170,11 @@ public class BotManager {
 
         String botname = name != null ? name : getNickGenerator().nextNick();
         Bot bot = new Bot(this, botname, getInetAddr(), null);
+        Player player = Bukkit.getPlayer(botname);
+        if (player != null) {
+            // Let's not create a bot if a player with that name is already online
+            return null;
+        }
         this.bots.add(bot);
         bot.connect();
         BotCreateEvent botCreateEvent = new BotCreateEvent(bot);
