@@ -45,7 +45,7 @@ public class Command {
                             if (bot != null) {
                                 Logger.logToSender(sender, "Created new bot '&b" + bot.getNickname() + "&7'");
                             } else {
-                                Logger.logToSender(sender, "&cFailed to create bot '&b" + name + "&7'");
+                                Logger.logToSender(sender, "&cFailed to create bot '&b" + name + "&c'");
                             }
                         })))
                 .then(new LiteralArgument("random")
