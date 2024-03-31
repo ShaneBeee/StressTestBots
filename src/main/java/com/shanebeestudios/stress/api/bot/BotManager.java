@@ -1,5 +1,6 @@
 package com.shanebeestudios.stress.api.bot;
 
+import com.shanebeestudios.stress.api.event.BotCreateEvent;
 import com.shanebeestudios.stress.api.generator.NickGenerator;
 import com.shanebeestudios.stress.api.timer.GravityTimer;
 import com.shanebeestudios.stress.api.util.Logger;
@@ -170,6 +171,8 @@ public class BotManager {
         Bot bot = new Bot(this, botname, getInetAddr(), null);
         this.bots.add(bot);
         bot.connect();
+        BotCreateEvent botCreateEvent = new BotCreateEvent(bot);
+        botCreateEvent.callEvent();
         return bot;
     }
 

@@ -13,6 +13,7 @@ import com.github.steveice10.packetlib.ProxyInfo;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.github.steveice10.packetlib.tcp.TcpClientSession;
+import com.shanebeestudios.stress.api.event.BotDisconnectEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -122,9 +123,9 @@ public class Bot {
     }
 
     /**
-     * Set whether the bot is connected
+     * Set whether the bot is connected to the server
      *
-     * @param connected Bot is connected
+     * @param connected Bot is connected to the server
      */
     public void setConnected(boolean connected) {
         this.connected = connected;
@@ -242,6 +243,8 @@ public class Bot {
     public void disconnect() {
         this.manualDisconnecting = true;
         this.client.disconnect("Leaving");
+        BotDisconnectEvent botDisconnectEvent = new BotDisconnectEvent(this);
+        botDisconnectEvent.callEvent();
     }
 
 }
