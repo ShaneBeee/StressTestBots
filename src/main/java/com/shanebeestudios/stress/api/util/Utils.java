@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.UUID;
@@ -27,14 +29,14 @@ public class Utils {
     @Nullable
     public static UUID nameToUUID(String playerName) {
         try {
-            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + playerName);
+            URL url = new URI("https://api.mojang.com/users/profiles/minecraft/" + playerName).toURL();
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(new InputStreamReader(url.openStream()));
             String uuidString = (String) json.get("id");
             if (uuidString != null) {
                 return UUID.fromString(uuidString.replaceFirst("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
             }
-        } catch (ParseException | IOException ignore) {
+        } catch (ParseException | IOException | URISyntaxException ignore) {
         }
         return null;
     }

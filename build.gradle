@@ -8,14 +8,14 @@ plugins {
 
 group 'com.shanebeestudios'
 version '1.0.0-beta1'
-def mcProtocolLibVer = '1.20.4-2-SNAPSHOT'
+def mcProtocolLibVer = '1.20.6-2-SNAPSHOT'
 def adventureVer = '4.16.0'
-def paperVer = '1.20.4-R0.1-SNAPSHOT'
-def commandApiVer = '9.3.0'
+def paperVer = '1.20.6-R0.1-SNAPSHOT'
+def commandApiVer = '9.5.0-SNAPSHOT'
 
-compileJava   {
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+compileJava {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
     options.encoding = 'UTF-8'
 }
 
@@ -27,11 +27,14 @@ repositories {
 
     // Paper
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
+
+    // Command API Snapshots
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
 }
 
 dependencies {
     // McProtocol
-    implementation('com.github.steveice10:mcprotocollib:' + mcProtocolLibVer)
+    implementation('org.geysermc.mcprotocollib:protocol:' + mcProtocolLibVer)
     implementation('net.kyori:adventure-text-serializer-gson:' + adventureVer)
 
     // Paper
@@ -65,7 +68,7 @@ build {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-4/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-6/plugins'
 }
 
 publishing {
@@ -86,7 +89,7 @@ javadoc {
         links('https://hub.spigotmc.org/javadocs/spigot/')
         links('https://jd.advntr.dev/api/4.14.0/')
         links('https://repo.opencollab.dev/javadoc/maven-snapshots/com/github/steveice10/mcauthlib/1.5-SNAPSHOT/raw')
-        links('https://repo.opencollab.dev/javadoc/maven-snapshots/com/github/steveice10/mcprotocollib/' + mcProtocolLibVer + '/raw')
+        links('https://repo.opencollab.dev/javadoc/maven-snapshots/org/geysermc/mcprotocollib/protocol/' + mcProtocolLibVer + '/raw')
     }
     options.addStringOption('Xdoclint:none', '-quiet')
 }

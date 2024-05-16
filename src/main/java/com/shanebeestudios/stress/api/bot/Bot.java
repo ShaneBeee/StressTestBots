@@ -2,25 +2,24 @@ package com.shanebeestudios.stress.api.bot;
 
 import com.github.steveice10.mc.auth.service.AuthenticationService;
 import com.github.steveice10.mc.auth.service.SessionService;
-import com.github.steveice10.mc.protocol.MinecraftConstants;
-import com.github.steveice10.mc.protocol.MinecraftProtocol;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.ServerboundChatPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosRotPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerRotPacket;
-import com.github.steveice10.packetlib.ProxyInfo;
-import com.github.steveice10.packetlib.Session;
-import com.github.steveice10.packetlib.packet.Packet;
-import com.github.steveice10.packetlib.tcp.TcpClientSession;
 import com.shanebeestudios.stress.api.event.BotDisconnectEvent;
+import org.geysermc.mcprotocollib.network.ProxyInfo;
+import org.geysermc.mcprotocollib.network.Session;
+import org.geysermc.mcprotocollib.network.packet.Packet;
+import org.geysermc.mcprotocollib.network.tcp.TcpClientSession;
+import org.geysermc.mcprotocollib.protocol.MinecraftConstants;
+import org.geysermc.mcprotocollib.protocol.MinecraftProtocol;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerPosRotPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.player.ServerboundMovePlayerRotPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.BitSet;
-import java.util.Collections;
 
 /**
  * Represents a bot that can join the server
@@ -80,7 +79,7 @@ public class Bot {
     public void connect() {
         new Thread(() -> {
             // We'll manage the keep alive, to create a fake letancy
-            this.client.setFlag("manage-keep-alive", false);
+            this.client.setFlag(MinecraftConstants.AUTOMATIC_KEEP_ALIVE_MANAGEMENT, false);
             this.client.addListener(new PacketListener(this));
             this.client.connect();
         }).start();
@@ -154,7 +153,7 @@ public class Bot {
         Packet packet;
         if (text.startsWith("/")) {
             // Send command
-            packet = new ServerboundChatCommandPacket(text.substring(1), timeStamp, 0L, Collections.emptyList(), 0, bitSet);
+            packet = new ServerboundChatCommandPacket(text.substring(1));
         } else {
             // Send chat
             packet = new ServerboundChatPacket(text, timeStamp, 0L, null, 0, bitSet);
