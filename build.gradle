@@ -8,10 +8,9 @@ plugins {
 
 group 'com.shanebeestudios'
 version '1.0.0'
-def mcProtocolLibVer = '1.20.6-2-SNAPSHOT'
+def minecraftVersion = '1.21'
 def adventureVer = '4.16.0'
-def paperVer = '1.20.6-R0.1-SNAPSHOT'
-def commandApiVer = '9.5.0-SNAPSHOT'
+def commandApiVer = '9.5.1'
 
 compileJava {
     sourceCompatibility = '21'
@@ -34,11 +33,11 @@ repositories {
 
 dependencies {
     // McProtocol
-    implementation('org.geysermc.mcprotocollib:protocol:' + mcProtocolLibVer)
+    implementation('org.geysermc.mcprotocollib:protocol:' + minecraftVersion + "-SNAPSHOT")
     implementation('net.kyori:adventure-text-serializer-gson:' + adventureVer)
 
     // Paper
-    compileOnly("io.papermc.paper:paper-api:" + paperVer)
+    compileOnly("io.papermc.paper:paper-api:" + minecraftVersion + "-R0.1-SNAPSHOT")
 
     // Command Api
     implementation("dev.jorel:commandapi-bukkit-shade:" + commandApiVer)
@@ -49,7 +48,7 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = project.name + "-" + project.version + ".jar"
+    archiveFileName = project.name + "-" + project.version + "-" + minecraftVersion + ".jar"
     relocate("dev.jorel.commandapi", "com.shanebeestudios.mcbots.api.commandapi")
 }
 
@@ -68,7 +67,7 @@ build {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-6/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-21/plugins'
 }
 
 publishing {
@@ -89,7 +88,7 @@ javadoc {
         links('https://hub.spigotmc.org/javadocs/spigot/')
         links('https://jd.advntr.dev/api/4.14.0/')
         links('https://repo.opencollab.dev/javadoc/maven-snapshots/com/github/steveice10/mcauthlib/1.5-SNAPSHOT/raw')
-        links('https://repo.opencollab.dev/javadoc/maven-snapshots/org/geysermc/mcprotocollib/protocol/' + mcProtocolLibVer + '/raw')
+        links('https://repo.opencollab.dev/javadoc/maven-snapshots/org/geysermc/mcprotocollib/protocol/' + minecraftVersion + '-SNAPSHOT/raw')
     }
     options.addStringOption('Xdoclint:none', '-quiet')
 }

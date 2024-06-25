@@ -1,7 +1,5 @@
 package com.shanebeestudios.stress.api.bot;
 
-import com.github.steveice10.mc.auth.service.AuthenticationService;
-import com.github.steveice10.mc.auth.service.SessionService;
 import com.shanebeestudios.stress.api.event.BotDisconnectEvent;
 import org.geysermc.mcprotocollib.network.ProxyInfo;
 import org.geysermc.mcprotocollib.network.Session;
@@ -50,27 +48,6 @@ public class Bot {
         botManager.logBotCreated(nickname);
         this.protocol = new MinecraftProtocol(nickname);
         this.client = new TcpClientSession(address.getHostString(), address.getPort(), this.protocol, proxy);
-    }
-
-    /**
-     * Create an online authenticated bot
-     *
-     * @param botManager  Instance of bot manager
-     * @param authService Auth service for connection
-     * @param address     Address the bot will connect to
-     * @param proxy       Proxy if available
-     */
-    public Bot(BotManager botManager, @NotNull AuthenticationService authService, @NotNull InetSocketAddress address, @Nullable ProxyInfo proxy) {
-        this.botManager = botManager;
-        this.nickname = authService.getUsername();
-
-        botManager.logBotCreated(this.nickname);
-        this.protocol = new MinecraftProtocol(authService.getSelectedProfile(), authService.getAccessToken());
-
-        this.client = new TcpClientSession(address.getHostString(), address.getPort(), this.protocol, proxy);
-
-        SessionService sessionService = new SessionService();
-        this.client.setFlag(MinecraftConstants.SESSION_SERVICE_KEY, sessionService);
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.shanebeestudios.stress.api.bot;
 
+import com.shanebeestudios.stress.api.util.Logger;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.geysermc.mcprotocollib.network.Session;
 import org.geysermc.mcprotocollib.network.event.session.DisconnectedEvent;
 import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
@@ -120,6 +122,8 @@ public class PacketListener extends SessionAdapter {
         this.bot.setConnected(false);
         this.botManager.logBotDisconnected(this.bot.getNickname());
         this.botManager.removeBot(this.bot);
+        String reason = LegacyComponentSerializer.legacyAmpersand().serialize(event.getReason());
+        Logger.info("Bot disconnected reason: &e" + reason);
         Thread.currentThread().interrupt();
     }
 

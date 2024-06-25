@@ -32,7 +32,7 @@ public class StressTestBots extends JavaPlugin {
         }
         try {
             CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
-                .verboseOutput(false).silentLogs(true));
+                .verboseOutput(false).silentLogs(true).skipReloadDatapacks(true));
             this.commandApiCanLoad = true;
         } catch (UnsupportedVersionException ignore) {
             this.commandApiCanLoad = false;
