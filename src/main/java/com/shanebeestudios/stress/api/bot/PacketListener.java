@@ -2,6 +2,7 @@ package com.shanebeestudios.stress.api.bot;
 
 import com.shanebeestudios.stress.api.util.Logger;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.cloudburstmc.math.vector.Vector3d;
 import org.geysermc.mcprotocollib.network.Session;
 import org.geysermc.mcprotocollib.network.event.session.DisconnectedEvent;
 import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
@@ -92,9 +93,10 @@ public class PacketListener extends SessionAdapter {
         }
     }
 
-    private void playerPosition(ClientboundPlayerPositionPacket positionPacket) {
-        this.bot.setLastPosition(positionPacket.getXRot(), positionPacket.getYRot(), positionPacket.getXRot());
-        this.client.send(new ServerboundAcceptTeleportationPacket(positionPacket.getId()));
+    private void playerPosition(ClientboundPlayerPositionPacket packet) {
+        Vector3d position = packet.getPosition();
+        this.bot.setLastPosition(position.getX(), position.getY(), position.getZ());
+        this.client.send(new ServerboundAcceptTeleportationPacket(packet.getId()));
     }
 
     @SuppressWarnings("unused")
