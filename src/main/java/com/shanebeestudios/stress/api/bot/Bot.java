@@ -186,7 +186,7 @@ public class Bot {
      * @param z Z coord of new location
      */
     public void moveTo(double x, double y, double z) {
-        this.client.send(new ServerboundMovePlayerPosPacket(true, x, y, z));
+        this.client.send(new ServerboundMovePlayerPosPacket(true, true, x, y, z));
     }
 
     /**
@@ -200,7 +200,7 @@ public class Bot {
      * @param pitch Pitch of new location
      */
     public void moveTo(double x, double y, double z, float yaw, float pitch) {
-        this.client.send(new ServerboundMovePlayerPosRotPacket(true, x, y, z, yaw, pitch));
+        this.client.send(new ServerboundMovePlayerPosRotPacket(true, true, x, y, z, yaw, pitch));
     }
 
     /**
@@ -210,7 +210,7 @@ public class Bot {
      * @param pitch Pitch of new position
      */
     private void look(float yaw, float pitch) {
-        this.client.send(new ServerboundMovePlayerRotPacket(true, yaw, pitch));
+        this.client.send(new ServerboundMovePlayerRotPacket(true, true, yaw, pitch));
     }
 
     /**

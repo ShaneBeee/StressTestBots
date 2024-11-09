@@ -93,8 +93,8 @@ public class PacketListener extends SessionAdapter {
     }
 
     private void playerPosition(ClientboundPlayerPositionPacket positionPacket) {
-        this.bot.setLastPosition(positionPacket.getX(), positionPacket.getY(), positionPacket.getZ());
-        this.client.send(new ServerboundAcceptTeleportationPacket(positionPacket.getTeleportId()));
+        this.bot.setLastPosition(positionPacket.getXRot(), positionPacket.getYRot(), positionPacket.getXRot());
+        this.client.send(new ServerboundAcceptTeleportationPacket(positionPacket.getId()));
     }
 
     @SuppressWarnings("unused")
