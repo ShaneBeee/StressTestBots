@@ -8,10 +8,10 @@ plugins {
 
 group 'com.shanebeestudios'
 version '1.0.2'
-def minecraftVersion = '1.21.3'
-def protocolVersion = '1.21.2'
+def minecraftVersion = '1.21.4'
+def protocolVersion = '1.21.4'
 def adventureVer = '4.16.0'
-def commandApiVer = '9.6.1'
+def commandApiVer = '9.7.0'
 
 compileJava {
     sourceCompatibility = '21'
@@ -68,7 +68,7 @@ build {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-2/plugins'
+    into '/Users/ShaneBee/Desktop/Server/1-21-4/plugins'
 }
 
 publishing {
