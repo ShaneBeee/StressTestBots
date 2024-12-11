@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'com.shanebeestudios'
-version '1.0.2'
+version '1.0.3'
 def minecraftVersion = '1.21.4'
 def protocolVersion = '1.21.4'
 def adventureVer = '4.16.0'
