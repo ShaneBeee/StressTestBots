@@ -1,10 +1,12 @@
 package com.shanebeestudios.stress.api.bot;
 
 import com.shanebeestudios.stress.api.event.BotDisconnectEvent;
+import org.geysermc.mcprotocollib.network.ClientSession;
 import org.geysermc.mcprotocollib.network.ProxyInfo;
 import org.geysermc.mcprotocollib.network.Session;
+import org.geysermc.mcprotocollib.network.netty.DefaultPacketHandlerExecutor;
 import org.geysermc.mcprotocollib.network.packet.Packet;
-import org.geysermc.mcprotocollib.network.tcp.TcpClientSession;
+import org.geysermc.mcprotocollib.network.session.ClientNetworkSession;
 import org.geysermc.mcprotocollib.protocol.MinecraftConstants;
 import org.geysermc.mcprotocollib.protocol.MinecraftProtocol;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundChatCommandPacket;
@@ -25,10 +27,9 @@ import java.util.BitSet;
 @SuppressWarnings("unused")
 public class Bot {
 
-    private final MinecraftProtocol protocol;
     private final BotManager botManager;
     private final String nickname;
-    private final Session client;
+    private final ClientSession client;
     private double lastX, lastY, lastZ = -1;
     private boolean connected;
     private boolean manualDisconnecting = false;
@@ -46,8 +47,8 @@ public class Bot {
         this.nickname = nickname;
 
         botManager.logBotCreated(nickname);
-        this.protocol = new MinecraftProtocol(nickname);
-        this.client = new TcpClientSession(address.getHostString(), address.getPort(), this.protocol, proxy);
+        MinecraftProtocol protocol = new MinecraftProtocol(nickname);
+        this.client = new ClientNetworkSession(address, protocol, DefaultPacketHandlerExecutor.createExecutor(), null, proxy);
     }
 
     /**
@@ -58,7 +59,7 @@ public class Bot {
             // We'll manage the keep alive, to create a fake letancy
             this.client.setFlag(MinecraftConstants.AUTOMATIC_KEEP_ALIVE_MANAGEMENT, false);
             this.client.addListener(new PacketListener(this));
-            this.client.connect();
+            this.client.connect(false);
         }).start();
     }
 
