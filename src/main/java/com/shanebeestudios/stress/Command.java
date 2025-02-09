@@ -34,6 +34,18 @@ public class Command {
     @SuppressWarnings("unchecked")
     public void registerCommand() {
         CommandTree command = new CommandTree("stress")
+            .then(new LiteralArgument("info")
+                .then(new EntitySelectorArgument.ManyPlayers("players")
+                    .executes((sender, args) -> {
+                        Collection<Entity> players = (Collection<Entity>) args.get("players");
+                        assert players != null;
+                        players.forEach(player -> {
+                            Bot bot = this.botManager.findBotByName(player.getName());
+                            if (bot != null) {
+                                Logger.logToSender(sender, "BotInfo: &7'" + bot);
+                            }
+                        });
+                    })))
             // Create a bot
             .then(new LiteralArgument("create")
                 .withPermission("stresstestbots.command.create")
