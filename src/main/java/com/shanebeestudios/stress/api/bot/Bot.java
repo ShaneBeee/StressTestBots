@@ -1,6 +1,13 @@
 package com.shanebeestudios.stress.api.bot;
 
+import com.shanebeestudios.stress.StressTestBots;
 import com.shanebeestudios.stress.api.event.BotDisconnectEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
+import org.cloudburstmc.math.vector.Vector3i;
 import org.geysermc.mcprotocollib.network.ClientSession;
 import org.geysermc.mcprotocollib.network.ProxyInfo;
 import org.geysermc.mcprotocollib.network.Session;
@@ -20,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.BitSet;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents a bot that can join the server
@@ -31,6 +39,7 @@ public class Bot {
     private final String nickname;
     private final ClientSession client;
     private double lastX, lastY, lastZ = -1;
+    private double highestY;
     private boolean connected;
     private boolean manualDisconnecting = false;
 
@@ -59,7 +68,7 @@ public class Bot {
             // We'll manage the keep alive, to create a fake letancy
             this.client.setFlag(MinecraftConstants.AUTOMATIC_KEEP_ALIVE_MANAGEMENT, false);
             this.client.addListener(new PacketListener(this));
-            this.client.connect(false);
+            this.client.connect(true);
         }).start();
     }
 
@@ -144,7 +153,46 @@ public class Bot {
      */
     public void fallDown() {
         if (this.connected && this.lastY > 0) {
-            move(0, -0.5, 0);
+            double distance = this.lastY - this.highestY;
+            if (distance > 0.5) {
+                move(0, -0.5, 0);
+            } else if (distance > 0) {
+                this.lastY = this.highestY;
+                moveTo(this.lastX, this.lastY, this.lastZ);
+            }
+        }
+    }
+
+    private CompletableFuture<Double> requestHighestBlock() {
+        CompletableFuture<Double> future = new CompletableFuture<>();
+        Bukkit.getScheduler().runTask(StressTestBots.getInstance(), () -> {
+            Player player = Bukkit.getPlayer(Bot.this.getNickname());
+            if (player != null) {
+                Block block = player.getWorld().getHighestBlockAt(player.getLocation());
+                BoundingBox boundingBox = block.getBoundingBox();
+
+                Location location = block.getLocation().add(0, boundingBox.getHeight(), 0);
+                future.complete(location.getY());
+            }
+        });
+        return future;
+    }
+
+    private void updateHighestY() {
+        requestHighestBlock().thenAccept(highestY -> this.highestY = highestY);
+    }
+
+    /**
+     * Handle a block change from the server
+     * <p>Used to recalculate highest Y position</p>
+     *
+     * @param block Location of block that changed
+     */
+    public void blockChange(Vector3i block) {
+        double x = Math.abs(block.getX() - this.lastX);
+        double z = Math.abs(block.getZ() - this.lastZ);
+        if (x < 1.5 && z < 1.5) {
+            updateHighestY();
         }
     }
 
@@ -157,9 +205,16 @@ public class Bot {
      * @param z Z pos of bot
      */
     public void setLastPosition(double x, double y, double z) {
+        if (this.lastX != x && this.lastZ != z) {
+            updateHighestY();
+        }
         this.lastX = x;
         this.lastY = y;
         this.lastZ = z;
+    }
+
+    public void updatePosToServer() {
+        moveTo(this.lastX, this.lastY, this.lastZ);
     }
 
     /**
@@ -187,7 +242,7 @@ public class Bot {
      * @param z Z coord of new location
      */
     public void moveTo(double x, double y, double z) {
-        this.client.send(new ServerboundMovePlayerPosPacket(true, true, x, y, z));
+        this.client.send(new ServerboundMovePlayerPosPacket(false, true, x, y, z));
     }
 
     /**
@@ -222,6 +277,21 @@ public class Bot {
         this.client.disconnect("Leaving");
         BotDisconnectEvent botDisconnectEvent = new BotDisconnectEvent(this);
         botDisconnectEvent.callEvent();
+    }
+
+    @Override
+    public String toString() {
+        String x = String.format("%.2f", this.lastX);
+        String y = String.format("%.2f", this.lastY);
+        String z = String.format("%.2f", this.lastZ);
+        return "Bot{" +
+            "nickname='" + nickname + '\'' +
+            ", lastX=" + x +
+            ", lastY=" + y +
+            ", lastZ=" + z +
+            ", highestY=" + highestY +
+            ", connected=" + connected +
+            '}';
     }
 
 }
