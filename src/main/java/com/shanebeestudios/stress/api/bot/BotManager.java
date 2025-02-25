@@ -14,12 +14,17 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Bot manager for server plugin
  */
 @SuppressWarnings("unused")
 public class BotManager {
+
+    private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(1);
 
     private final int autoRespawnDelay;
     private final boolean hasGravity;
@@ -78,8 +83,8 @@ public class BotManager {
     }
 
     /**
-     * @hidden currently unused
      * @return hidden
+     * @hidden currently unused
      */
     public List<String> getJoinMessages() {
         return this.joinMessages;
@@ -95,8 +100,8 @@ public class BotManager {
     }
 
     /**
-     * @hidden not sure if this has a use by others
      * @return hidden
+     * @hidden not sure if this has a use by others
      */
     public GravityTimer getGravityTimer() {
         return this.gravityTimer;
@@ -166,6 +171,19 @@ public class BotManager {
      */
     @Nullable
     public Bot createBot(@Nullable String name) {
+        return createBot(name, 0);
+    }
+
+    /**
+     * Create a bot
+     *
+     * @param name       Name of bot or null to create random named bot
+     *                   Name must be between 1 and 16 characters
+     * @param loginDelay Delay in ticks for the bot to login
+     * @return Bot if was created, else null
+     */
+    @Nullable
+    public Bot createBot(@Nullable String name, long loginDelay) {
         if (name != null && name.length() > 16) return null;
 
         String botname = name != null ? name : getNickGenerator().nextNick();
@@ -176,7 +194,11 @@ public class BotManager {
             return null;
         }
         this.bots.add(bot);
-        bot.connect();
+        if (loginDelay > 0) {
+            EXECUTOR.schedule(bot::connect, loginDelay * 50, TimeUnit.MILLISECONDS);
+        } else {
+            bot.connect();
+        }
         BotCreateEvent botCreateEvent = new BotCreateEvent(bot);
         botCreateEvent.callEvent();
         return bot;
