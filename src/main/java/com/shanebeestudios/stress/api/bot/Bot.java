@@ -64,12 +64,10 @@ public class Bot {
      * Connect the bot to the server
      */
     public void connect() {
-        new Thread(() -> {
-            // We'll manage the keep alive, to create a fake letancy
-            this.client.setFlag(MinecraftConstants.AUTOMATIC_KEEP_ALIVE_MANAGEMENT, false);
-            this.client.addListener(new PacketListener(this));
-            this.client.connect(true);
-        }).start();
+        // We'll manage the keep alive, to create a fake letancy
+        this.client.setFlag(MinecraftConstants.AUTOMATIC_KEEP_ALIVE_MANAGEMENT, false);
+        this.client.addListener(new PacketListener(this));
+        this.client.connect(true);
     }
 
     /**

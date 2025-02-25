@@ -25,12 +25,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @hidden
  */
 @SuppressWarnings({"DuplicatedCode", "FieldCanBeLocal", "unused"})
 public class PacketListener extends SessionAdapter {
+
+    private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(1);
 
     private final Bot bot;
     private int entityId;
@@ -46,7 +51,7 @@ public class PacketListener extends SessionAdapter {
         this.botManager = bot.getBotManager();
         this.joinMessages = this.botManager.getJoinMessages();
         this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
-        this.latency = new Random().nextInt(100, 1000);
+        this.latency = new Random().nextInt(25, 500);
     }
 
     @Override
@@ -81,13 +86,10 @@ public class PacketListener extends SessionAdapter {
         }
         // Delay to make sure gravity works
         // No clue why it is needed, but here we are
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PacketListener.this.bot.setConnected(true);
-                startPosUpdateTimer();
-            }
-        }, 50);
+        EXECUTOR.schedule(() -> {
+            PacketListener.this.bot.setConnected(true);
+            startPosUpdateTimer();
+        }, 50, TimeUnit.MILLISECONDS);
     }
 
     private void playerPosition(ClientboundPlayerPositionPacket packet) {
@@ -99,13 +101,8 @@ public class PacketListener extends SessionAdapter {
     @SuppressWarnings("unused")
     private void playerDeath(ClientboundPlayerCombatKillPacket killPacket) {
         if (this.autoRespawnDelay < 0) return;
-        new Timer().schedule(
-            new TimerTask() {
-                @Override
-                public void run() {
-                    PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN));
-                }
-            }, this.autoRespawnDelay);
+        EXECUTOR.schedule(() -> PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN)),
+            this.autoRespawnDelay, TimeUnit.MILLISECONDS);
     }
 
     private void playerLatency(ClientboundKeepAlivePacket keepAlivePacket) {
@@ -132,12 +129,8 @@ public class PacketListener extends SessionAdapter {
     }
 
     private void startPosUpdateTimer() {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PacketListener.this.bot.updatePosToServer();
-            }
-        }, 1000, 1000);
+        EXECUTOR.scheduleAtFixedRate(PacketListener.this.bot::updatePosToServer,
+            1, 1, TimeUnit.SECONDS);
     }
 
 }
