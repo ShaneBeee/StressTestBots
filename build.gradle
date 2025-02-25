@@ -51,6 +51,9 @@ processResources {
 shadowJar {
     archiveFileName = project.name + "-" + project.version + "-" + minecraftVersion + ".jar"
     relocate("dev.jorel.commandapi", "com.shanebeestudios.mcbots.api.commandapi")
+    minimize() {
+        exclude(dependency('org.cloudburstmc.math:.*:.*'))
+    }
 }
 
 build {
