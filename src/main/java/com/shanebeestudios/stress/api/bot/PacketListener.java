@@ -23,8 +23,6 @@ import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.level.Serve
 
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +49,7 @@ public class PacketListener extends SessionAdapter {
         this.botManager = bot.getBotManager();
         this.joinMessages = this.botManager.getJoinMessages();
         this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
-        this.latency = new Random().nextInt(25, 500);
+        this.latency = new Random().nextInt(20, 150);
     }
 
     @Override
@@ -106,12 +104,8 @@ public class PacketListener extends SessionAdapter {
     }
 
     private void playerLatency(ClientboundKeepAlivePacket keepAlivePacket) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PacketListener.this.client.send(new ServerboundKeepAlivePacket(keepAlivePacket.getPingId()));
-            }
-        }, this.latency);
+        EXECUTOR.schedule(() -> PacketListener.this.client.send(new ServerboundKeepAlivePacket(keepAlivePacket.getPingId())),
+            this.latency, TimeUnit.MILLISECONDS);
     }
 
     private void blockChange(ClientboundBlockUpdatePacket packet) {
