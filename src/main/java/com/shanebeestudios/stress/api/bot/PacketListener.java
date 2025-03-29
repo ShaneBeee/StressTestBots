@@ -8,6 +8,7 @@ import org.geysermc.mcprotocollib.network.event.session.DisconnectedEvent;
 import org.geysermc.mcprotocollib.network.event.session.SessionAdapter;
 import org.geysermc.mcprotocollib.network.packet.Packet;
 import org.geysermc.mcprotocollib.protocol.data.game.ClientCommand;
+import org.geysermc.mcprotocollib.protocol.data.game.level.block.BlockChangeEntry;
 import org.geysermc.mcprotocollib.protocol.data.game.level.notify.GameEvent;
 import org.geysermc.mcprotocollib.protocol.data.game.level.notify.RespawnScreenValue;
 import org.geysermc.mcprotocollib.protocol.packet.common.clientbound.ClientboundKeepAlivePacket;
@@ -15,20 +16,24 @@ import org.geysermc.mcprotocollib.protocol.packet.common.serverbound.Serverbound
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.ClientboundLoginPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerCombatKillPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.entity.player.ClientboundPlayerPositionPacket;
+import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundBlockUpdatePacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundGameEventPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.ServerboundClientCommandPacket;
 import org.geysermc.mcprotocollib.protocol.packet.ingame.serverbound.level.ServerboundAcceptTeleportationPacket;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @hidden
  */
 @SuppressWarnings({"DuplicatedCode", "FieldCanBeLocal", "unused"})
 public class PacketListener extends SessionAdapter {
+
+    private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(1);
 
     private final Bot bot;
     private int entityId;
@@ -44,21 +49,20 @@ public class PacketListener extends SessionAdapter {
         this.botManager = bot.getBotManager();
         this.joinMessages = this.botManager.getJoinMessages();
         this.autoRespawnDelay = this.botManager.getAutoRespawnDelay();
-        this.latency = new Random().nextInt(100, 1000);
+        this.latency = new Random().nextInt(20, 150);
     }
 
     @Override
     public void packetReceived(Session session, Packet packet) {
-        if (packet instanceof ClientboundGameEventPacket gameEventPacket) {
-            gameEvent(gameEventPacket);
-        } else if (packet instanceof ClientboundLoginPacket loginPacket) {
-            login(loginPacket);
-        } else if (packet instanceof ClientboundPlayerPositionPacket positionPacket) {
-            playerPosition(positionPacket);
-        } else if (packet instanceof ClientboundPlayerCombatKillPacket killPacket) {
-            playerDeath(killPacket);
-        } else if (packet instanceof ClientboundKeepAlivePacket keepAlivePacket) {
-            playerLatency(keepAlivePacket);
+        switch (packet) {
+            case ClientboundGameEventPacket gameEventPacket -> gameEvent(gameEventPacket);
+            case ClientboundLoginPacket loginPacket -> login(loginPacket);
+            case ClientboundPlayerPositionPacket positionPacket -> playerPosition(positionPacket);
+            case ClientboundPlayerCombatKillPacket killPacket -> playerDeath(killPacket);
+            case ClientboundKeepAlivePacket keepAlivePacket -> playerLatency(keepAlivePacket);
+            case ClientboundBlockUpdatePacket blockUpdatePacket -> blockChange(blockUpdatePacket);
+            default -> {
+            }
         }
     }
 
@@ -78,19 +82,12 @@ public class PacketListener extends SessionAdapter {
         if (!loginPacket.isEnableRespawnScreen()) {
             this.autoRespawnDelay = 0;
         }
-        this.bot.setConnected(true);
-
-        // Might implement this later
-        if (!this.joinMessages.isEmpty()) {
-            for (String msg : joinMessages) {
-                this.bot.sendChat(msg);
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignored) {
-                }
-            }
-        }
+        // Delay to make sure gravity works
+        // No clue why it is needed, but here we are
+        EXECUTOR.schedule(() -> {
+            PacketListener.this.bot.setConnected(true);
+            startPosUpdateTimer();
+        }, 50, TimeUnit.MILLISECONDS);
     }
 
     private void playerPosition(ClientboundPlayerPositionPacket packet) {
@@ -102,22 +99,18 @@ public class PacketListener extends SessionAdapter {
     @SuppressWarnings("unused")
     private void playerDeath(ClientboundPlayerCombatKillPacket killPacket) {
         if (this.autoRespawnDelay < 0) return;
-        new Timer().schedule(
-            new TimerTask() {
-                @Override
-                public void run() {
-                    PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN));
-                }
-            }, this.autoRespawnDelay);
+        EXECUTOR.schedule(() -> PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN)),
+            this.autoRespawnDelay, TimeUnit.MILLISECONDS);
     }
 
     private void playerLatency(ClientboundKeepAlivePacket keepAlivePacket) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                PacketListener.this.client.send(new ServerboundKeepAlivePacket(keepAlivePacket.getPingId()));
-            }
-        }, this.latency);
+        EXECUTOR.schedule(() -> PacketListener.this.client.send(new ServerboundKeepAlivePacket(keepAlivePacket.getPingId())),
+            this.latency, TimeUnit.MILLISECONDS);
+    }
+
+    private void blockChange(ClientboundBlockUpdatePacket packet) {
+        BlockChangeEntry entry = packet.getEntry();
+        this.bot.blockChange(entry.getPosition());
     }
 
     public void disconnected(DisconnectedEvent event) {
@@ -127,6 +120,11 @@ public class PacketListener extends SessionAdapter {
         String reason = LegacyComponentSerializer.legacyAmpersand().serialize(event.getReason());
         Logger.info("Bot disconnected reason: &e" + reason);
         Thread.currentThread().interrupt();
+    }
+
+    private void startPosUpdateTimer() {
+        EXECUTOR.scheduleAtFixedRate(PacketListener.this.bot::updatePosToServer,
+            1, 1, TimeUnit.SECONDS);
     }
 
 }

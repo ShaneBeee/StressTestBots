@@ -84,6 +84,7 @@ public class StressTestBots extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
         if (!Bukkit.getOnlineMode()) CommandAPI.onDisable();
         instance = null;
     }
