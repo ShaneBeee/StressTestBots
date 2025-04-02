@@ -4,7 +4,7 @@ plugins {
     id("maven-publish")
 }
 
-val pluginVersion = "1.0.2"
+val pluginVersion = "1.1.0"
 val minecraftVersion = "1.21.4"
 val protocolVersion = "1.21.4-SNAPSHOT"
 val adventureVer = "4.17.0"
