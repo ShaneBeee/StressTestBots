@@ -67,7 +67,7 @@ public class PacketListener extends SessionAdapter {
     }
 
     private void gameEvent(ClientboundGameEventPacket gameEventPacket) {
-        if (gameEventPacket.getNotification() == GameEvent.ENABLE_RESPAWN_SCREEN) {
+        if (gameEventPacket.getNotification() == GameEvent.IMMEDIATE_RESPAWN) {
             RespawnScreenValue respawnScreenValue = (RespawnScreenValue) gameEventPacket.getValue();
             if (respawnScreenValue == RespawnScreenValue.IMMEDIATE_RESPAWN) {
                 this.autoRespawnDelay = 0;

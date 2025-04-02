@@ -141,7 +141,7 @@ public class Bot {
             packet = new ServerboundChatCommandPacket(text.substring(1));
         } else {
             // Send chat
-            packet = new ServerboundChatPacket(text, timeStamp, 0L, null, 0, bitSet);
+            packet = new ServerboundChatPacket(text, timeStamp, 0L, null, 0, bitSet, 0);
         }
         this.client.send(packet);
     }

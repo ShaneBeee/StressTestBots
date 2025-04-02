@@ -5,8 +5,8 @@ plugins {
 }
 
 val pluginVersion = "1.1.0"
-val minecraftVersion = "1.21.4"
-val protocolVersion = "1.21.4-SNAPSHOT"
+val minecraftVersion = "1.21.5"
+val protocolVersion = "1.21.5-SNAPSHOT"
 val adventureVer = "4.17.0"
 val commandApiVer = "10.0.0"
 
@@ -41,7 +41,7 @@ tasks {
         dependsOn("shadowJar")
         from("build/libs") {
             include("StressTestBots-*.jar")
-            destinationDir = file("/Users/ShaneBee/Desktop/Server/Skript/$minecraftVersion/plugins/")
+            destinationDir = file("/Users/ShaneBee/Desktop/Server/Skript/1-21-5/plugins/")
         }
 
     }
