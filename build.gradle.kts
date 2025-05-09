@@ -8,7 +8,7 @@ val pluginVersion = "1.1.0"
 val minecraftVersion = "1.21.5"
 val protocolVersion = "1.21.5-SNAPSHOT"
 val adventureVer = "4.17.0"
-val commandApiVer = "10.0.0"
+val commandApiVer = "10.0.1"
 
 repositories {
     mavenCentral()
@@ -34,6 +34,9 @@ dependencies {
 
     // Command Api
     implementation("dev.jorel:commandapi-bukkit-shade:$commandApiVer")
+
+    // Json
+    implementation("com.googlecode.json-simple:json-simple:1.1")
 }
 
 tasks {
