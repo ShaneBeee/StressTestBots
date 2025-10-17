@@ -1,6 +1,0 @@
-main: com.shanebeestudios.stress.StressTestBots
-name: "StressTestBots"
-version: '${version}'
-api-version: 1.13
-loadbefore:
-  - Skript

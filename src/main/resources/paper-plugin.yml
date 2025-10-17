@@ -1,0 +1,9 @@
+main: com.shanebeestudios.stress.StressTestBots
+name: "StressTestBots"
+version: '${version}'
+api-version: '1.21'
+dependencies:
+  server:
+    Skript:
+      load: AFTER
+      required: false

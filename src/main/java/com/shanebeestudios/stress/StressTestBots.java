@@ -3,7 +3,7 @@ package com.shanebeestudios.stress;
 import com.shanebeestudios.stress.api.bot.BotManager;
 import com.shanebeestudios.stress.api.util.Logger;
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import dev.jorel.commandapi.CommandAPIPaperConfig;
 import dev.jorel.commandapi.exceptions.UnsupportedVersionException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -31,8 +31,8 @@ public class StressTestBots extends JavaPlugin {
             return;
         }
         try {
-            CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
-                .verboseOutput(false).silentLogs(true).skipReloadDatapacks(true));
+            CommandAPI.onLoad(new CommandAPIPaperConfig(this)
+                .verboseOutput(false).silentLogs(true));
             this.commandApiCanLoad = true;
         } catch (UnsupportedVersionException ignore) {
             this.commandApiCanLoad = false;

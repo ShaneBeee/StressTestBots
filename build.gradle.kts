@@ -5,10 +5,10 @@ plugins {
 }
 
 val pluginVersion = "1.1.0"
-val minecraftVersion = "1.21.5"
-val protocolVersion = "1.21.5-SNAPSHOT"
+val minecraftVersion = "1.21.9"
+val protocolVersion = "1.21.9-SNAPSHOT"
 val adventureVer = "4.17.0"
-val commandApiVer = "10.0.1"
+val commandApiVer = "11.0.0"
 
 repositories {
     mavenCentral()
@@ -33,7 +33,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
 
     // Command Api
-    implementation("dev.jorel:commandapi-bukkit-shade:$commandApiVer")
+    implementation("dev.jorel:commandapi-paper-shade:$commandApiVer")
 
     // Json
     implementation("com.googlecode.json-simple:json-simple:1.1")
@@ -44,7 +44,7 @@ tasks {
         dependsOn("shadowJar")
         from("build/libs") {
             include("StressTestBots-*.jar")
-            destinationDir = file("/Users/ShaneBee/Desktop/Server/Skript/1-21-5/plugins/")
+            destinationDir = file("/Users/ShaneBee/Desktop/Server/Skript/1-21-10/plugins/")
         }
 
     }
