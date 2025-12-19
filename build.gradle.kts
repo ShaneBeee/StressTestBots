@@ -57,6 +57,7 @@ tasks {
         options.compilerArgs.add("-Xlint:deprecation")
     }
     javadoc {
+        title = "StressTestBots $pluginVersion API"
         options.encoding = Charsets.UTF_8.name()
         exclude("com/shanebeestudios/core/plugin")
         (options as StandardJavadocDocletOptions).links(
