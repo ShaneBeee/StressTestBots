@@ -1,7 +1,7 @@
 main: com.shanebeestudios.stress.StressTestBots
 name: "StressTestBots"
 version: '${version}'
-api-version: '1.21'
+api-version: '${minecraftVersion}'
 dependencies:
   server:
     Skript:

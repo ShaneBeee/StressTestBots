@@ -38,6 +38,9 @@ dependencies {
 
     // Json
     implementation("com.googlecode.json-simple:json-simple:1.1")
+
+    // bStats
+    implementation("org.bstats:bstats-bukkit:3.2.1")
 }
 
 tasks {
@@ -50,7 +53,8 @@ tasks {
 
     }
     processResources {
-        expand("version" to pluginVersion)
+        expand("version" to "$pluginVersion-$minecraftVersion",
+            "minecraftVersion" to minecraftVersion)
     }
     compileJava {
         options.release = 25
@@ -69,6 +73,7 @@ tasks {
     }
     shadowJar {
         relocate("dev.jorel.commandapi", "com.shanebeestudios.stress.api.commandapi")
+        relocate("org.bstats", "com.shanebeestudios.stress.api.bstats")
         archiveFileName = "${project.name}-${pluginVersion}-${minecraftVersion}.jar"
         minimize {
             exclude(dependency("org.cloudburstmc.math:.*:.*"))

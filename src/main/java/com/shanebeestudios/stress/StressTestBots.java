@@ -1,10 +1,14 @@
 package com.shanebeestudios.stress;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.shanebeestudios.stress.api.bot.BotManager;
 import com.shanebeestudios.stress.api.util.Logger;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIPaperConfig;
 import dev.jorel.commandapi.exceptions.UnsupportedVersionException;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.DrilldownPie;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,14 +71,9 @@ public class StressTestBots extends JavaPlugin {
         loadNicknameFile();
         setupBotLogic();
         setupCommand();
+        setupMetrics();
 
-        // Beta check + notice
         String version = getDescription().getVersion();
-        if (version.contains("-")) {
-            Logger.warn("This is a BETA build, things may not work as expected, please report any bugs on GitHub.");
-            Logger.warn("https://github.com/ShaneBeee/StressTestBots/issues");
-        }
-
         long finish = System.currentTimeMillis() - start;
         Logger.info("&aSuccessfully enabled v%s&7 in &b%s ms", version, finish);
     }
@@ -103,6 +102,34 @@ public class StressTestBots extends JavaPlugin {
         CommandAPI.onEnable();
         new Command(this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
+    }
+
+    private void setupMetrics() {
+        Metrics metrics = new Metrics(this, 30808);
+
+        // New Metrics
+        // Many of these are copied from Skript -> SkriptMetrics.class
+        metrics.addCustomChart(new DrilldownPie("plugin_version_drilldown_pie", () -> {
+            String version = this.getPluginMeta().getVersion();
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
+            table.put(
+                version.split("-")[0], // upper label
+                version, // lower label
+                1 // weight
+            );
+            return table.rowMap();
+        }));
+        metrics.addCustomChart(new DrilldownPie("minecraft_version_drilldown_pie", () -> {
+            String[] version = Bukkit.getMinecraftVersion().split("\\.");
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
+
+            table.put(
+                version[0] + ".x", // upper label
+                String.join(".", version), // lower label
+                1 // weight
+            );
+            return table.rowMap();
+        }));
     }
 
     /**
