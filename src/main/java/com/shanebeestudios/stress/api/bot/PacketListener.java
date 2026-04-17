@@ -99,7 +99,7 @@ public class PacketListener extends SessionAdapter {
     @SuppressWarnings("unused")
     private void playerDeath(ClientboundPlayerCombatKillPacket killPacket) {
         if (this.autoRespawnDelay < 0) return;
-        EXECUTOR.schedule(() -> PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.RESPAWN)),
+        EXECUTOR.schedule(() -> PacketListener.this.client.send(new ServerboundClientCommandPacket(ClientCommand.PERFORM_RESPAWN)),
             this.autoRespawnDelay, TimeUnit.MILLISECONDS);
     }
 
