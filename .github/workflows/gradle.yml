@@ -18,15 +18,13 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4.1.4
-      - name: Set up JDK 21
+      - name: Set up JDK 25
         uses: actions/setup-java@v4.2.1
         with:
-          java-version: '21'
+          java-version: '25'
           distribution: 'temurin'
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v3.3.2
@@ -36,6 +34,6 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           # Artifact name
-          name: McBots-Artifact
+          name: StressTestBots-Artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: build/libs/mc-bots*.jar
+          path: build/libs/StressTestBots-*.jar

@@ -1,14 +1,15 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.5"
+    id("com.gradleup.shadow") version "9.3.0"
     id("maven-publish")
 }
 
 val pluginVersion = "1.1.0"
-val minecraftVersion = "1.21.11"
-val protocolVersion = "1.21.11-SNAPSHOT"
+val minecraftVersion = "26.1.2"
+val protocolVersion = "26.1-SNAPSHOT"
 val adventureVer = "4.25.0"
-val commandApiVer = "11.0.1-SNAPSHOT"
+val commandApiVer = "11.2.0"
+val serverLocation = "Skript/26-1"
 
 repositories {
     mavenCentral()
@@ -30,7 +31,7 @@ dependencies {
     implementation("net.kyori:adventure-text-serializer-gson:$adventureVer")
 
     // Paper
-    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:$minecraftVersion.build.+")
 
     // Command Api
     implementation("dev.jorel:commandapi-paper-shade:$commandApiVer")
@@ -44,7 +45,7 @@ tasks {
         dependsOn("shadowJar")
         from("build/libs") {
             include("StressTestBots-*.jar")
-            destinationDir = file("/Users/ShaneBee/Desktop/Server/Skript/1-21-11/plugins/")
+            destinationDir = file("/Users/ShaneBee/Desktop/Server/Minecraft/$serverLocation/plugins/")
         }
 
     }
@@ -52,7 +53,7 @@ tasks {
         expand("version" to pluginVersion)
     }
     compileJava {
-        options.release = 21
+        options.release = 25
         options.compilerArgs.add("-Xlint:unchecked")
         options.compilerArgs.add("-Xlint:deprecation")
     }
