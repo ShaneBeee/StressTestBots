@@ -6,10 +6,10 @@ plugins {
 
 val pluginVersion = "1.1.0"
 val minecraftVersion = "26.1.2"
-val protocolVersion = "26.1-SNAPSHOT"
+val protocolVersion = "26.2-SNAPSHOT"
 val adventureVer = "4.25.0"
 val commandApiVer = "11.2.0"
-val serverLocation = "Skript/26-1"
+val serverLocation = "Skript/26-2"
 
 repositories {
     mavenCentral()
